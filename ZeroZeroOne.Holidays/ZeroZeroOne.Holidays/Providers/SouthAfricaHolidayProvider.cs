@@ -6,7 +6,7 @@ using ZeroZeroOne.Holidays.Interface;
 
 namespace ZeroZeroOne.Holidays.Providers
 {
-    public class SouthAfricaHolidayProvider : ICountryHolidayProvider
+    public class SouthAfricaHolidayProvider : BaseHolidayProvider
     {
         /*
             1 January – New Years Day
@@ -22,59 +22,28 @@ namespace ZeroZeroOne.Holidays.Providers
             25 December - Christmas Day
             26 December - Day Of Goodwill
          */
-        internal readonly List<IHoliday> Holidays;
-
-        internal readonly Dictionary<DateTime, Int32> HolidaysCache;
-
-        public SouthAfricaHolidayProvider()
+        public SouthAfricaHolidayProvider(IHolidayCache cache): base(cache)
         {
-            HolidaysCache = new Dictionary<DateTime, int>();
-            Holidays = new List<IHoliday>();
-
             SetUpHolidays();
         }
 
-        public virtual void SetUpHolidays()
+        public void SetUpHolidays()
         {
-            AddHoliday(new AnnualHoliday(1, 1, true)); // New Years Day
-            AddHoliday(new AnnualHoliday(21, 3, true)); // Human Rights Day
+            AddHoliday(new AnnualHoliday(1, 1, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // New Years Day
+            AddHoliday(new AnnualHoliday(21, 3, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Human Rights Day
             AddHoliday(new EasterSundayRelativeHoliday(-2)); // Good Friday
             AddHoliday(new EasterSundayRelativeHoliday(1)); // Family Day
-            AddHoliday(new AnnualHoliday(27, 4, true)); // Freedom Day
-            AddHoliday(new AnnualHoliday(1, 5, true)); // Workers Day
-            AddHoliday(new AnnualHoliday(16, 6, true)); // Youth Day
-            AddHoliday(new AnnualHoliday(9, 8, true)); // National Women's Day
-            AddHoliday(new AnnualHoliday(24, 9, true)); // Heritage Day
-            AddHoliday(new AnnualHoliday(16, 12, true)); // Day of Reconciliation
-            AddHoliday(new AnnualHoliday(25, 12, true)); // Christmas Day
-            AddHoliday(new AnnualHoliday(26, 12, true)); // Day Of Goodwill
+            AddHoliday(new AnnualHoliday(27, 4, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Freedom Day
+            AddHoliday(new AnnualHoliday(1, 5, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Workers Day
+            AddHoliday(new AnnualHoliday(16, 6, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Youth Day
+            AddHoliday(new AnnualHoliday(9, 8, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // National Women's Day
+            AddHoliday(new AnnualHoliday(24, 9, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Heritage Day
+            AddHoliday(new AnnualHoliday(16, 12, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Day of Reconciliation
+            AddHoliday(new AnnualHoliday(25, 12, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Christmas Day
+            AddHoliday(new AnnualHoliday(26, 12, AnnualHoliday.WeekendDayMovementAction.MoveToMondayIfSunday)); // Day Of Goodwill
 
             // Fixed date holidays
             AddHoliday(new FixedDateHoliday(3, 8, 2016)); // Local Government Elections 2016
         }
-
-        public void AddHoliday(IHoliday holiday)
-        {
-            Holidays.Add(holiday);
-        }
-
-        public List<DateTime> GetHolidaysForYear(int year)
-        {
-            // Determine public holidays for this year
-            foreach (var holiday in Holidays)
-            {
-                var dateForyear = holiday.GetHolidayDateForyear(year);
-                if (dateForyear.HasValue && !HolidaysCache.ContainsKey(dateForyear.Value))
-                    HolidaysCache.Add(dateForyear.Value, year);
-            }
-
-            return HolidaysCache.Where(x => x.Value == year).Select(x => x.Key).ToList();
-        }
-
-        public Boolean DateIsHoliday(DateTime date)
-        {
-            return GetHolidaysForYear(date.Year).Any(x => x.Date == date.Date);
-        }
-
     }
 }

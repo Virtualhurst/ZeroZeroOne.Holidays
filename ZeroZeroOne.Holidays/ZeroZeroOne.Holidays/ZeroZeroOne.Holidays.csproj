@@ -40,13 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\SimpleHolidayCache.cs" />
     <Compile Include="Holiday\AnnualHoliday.cs" />
     <Compile Include="Holiday\EasterSundayRelativeHoliday.cs" />
     <Compile Include="Holiday\FixedDateHoliday.cs" />
     <Compile Include="HolidayManager.cs" />
     <Compile Include="Interface\ICountryHolidayProvider.cs" />
+    <Compile Include="Interface\IHolidayCache.cs" />
     <Compile Include="Interface\IHoliday.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\BaseHolidayProvider.cs" />
+    <Compile Include="Providers\UnitedStatesHolidayProvider.cs" />
     <Compile Include="Providers\SouthAfricaHolidayProvider.cs" />
   </ItemGroup>
   <ItemGroup />
